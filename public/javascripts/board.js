@@ -1,3 +1,16 @@
+function board_click(ev)
+{
+    var x = ev.clientX - canvas.offsetLeft;
+    var y = ev.clientY - canvas.offsetTop;
+
+    if (x <= canvas.height){
+       xBlock = Math.floor(x / BLOCK_SIZE);
+       yBlock = Math.floor(y / BLOCK_SIZE);
+    }
+
+    io.emit('tile_clicked', { x: xBlock, y: yBlock});
+}
+
 function draw(users_board)
 {
     //console.dir(usersBlocks)
@@ -65,8 +78,9 @@ function getBlockColour(iRowCounter, iBlockCounter, users_board)
     //console.log(iRowCounter + " "+iBlockCounter)
 
     if ( users_board != undefined ) {
-      if( users_board[iBlockCounter] != null && users_board[iBlockCounter][iRowCounter] != null && typeof users_board[iBlockCounter][iRowCounter] == 'number' )
+      if( users_board[iBlockCounter] != null && users_board[iBlockCounter][iRowCounter] != null && typeof users_board[iBlockCounter][iRowCounter] == 'number' ) {
           cStartColour = BLOCK_COLOUR_TAKEN;
+      }
       else{
         if(iRowCounter % 2){
           cStartColour = (iBlockCounter % 2?BLOCK_COLOUR_1:BLOCK_COLOUR_2);
@@ -85,19 +99,5 @@ function getBlockColour(iRowCounter, iBlockCounter, users_board)
       }
     }
 
-
     return cStartColour;
-}
-
-function board_click(ev)
-{
-    var x = ev.clientX - canvas.offsetLeft;
-    var y = ev.clientY - canvas.offsetTop;
-
-    if (x <= canvas.height){
-       xBlock = Math.floor(x / BLOCK_SIZE);
-       yBlock = Math.floor(y / BLOCK_SIZE);
-    }
-
-    io.emit('tile_clicked', { x: xBlock, y: yBlock});
 }
