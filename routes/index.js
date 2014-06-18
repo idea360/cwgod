@@ -8,10 +8,10 @@ module.exports = function Route(app){
   app.io.route('tile_clicked', function(req){
     if (boardPositions[req.data.y] === undefined ){
       boardPositions[req.data.y] = []
-      boardPositions[req.data.y].push(req.data.x)
+      boardPositions[req.data.y][req.data.x] = 1
     }
     else {
-      boardPositions[req.data.y].push(req.data.x)
+      boardPositions[req.data.y][req.data.x] = 1
     }
     console.log('Y cordinate: ' + req.data.y);
     console.log('X cordinate: ' + req.data.x)
