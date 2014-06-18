@@ -64,17 +64,27 @@ function getBlockColour(iRowCounter, iBlockCounter, users_board)
     var BLOCK_COLOUR_1 = 'gray', BLOCK_COLOUR_2 = 'darkgray', BLOCK_COLOUR_TAKEN = 'green';
     //console.log(iRowCounter + " "+iBlockCounter)
 
-    if (users_board != undefined ) {
-      if(users_board[iRowCounter][iBlockCounter] != undefined){
+    if ( users_board != undefined ) {
+      if( users_board[iBlockCounter] != null && users_board[iBlockCounter][iRowCounter] != null && typeof users_board[iBlockCounter][iRowCounter] == 'number' )
           cStartColour = BLOCK_COLOUR_TAKEN;
+      else{
+        if(iRowCounter % 2){
+          cStartColour = (iBlockCounter % 2?BLOCK_COLOUR_1:BLOCK_COLOUR_2);
+        } 
+        else {
+          cStartColour = (iBlockCounter % 2?BLOCK_COLOUR_2:BLOCK_COLOUR_1);
+        }
       }
     }
-    else if(iRowCounter % 2){
+    else{
+      if(iRowCounter % 2){
         cStartColour = (iBlockCounter % 2?BLOCK_COLOUR_1:BLOCK_COLOUR_2);
-    } 
-    else {
+      } 
+      else {
         cStartColour = (iBlockCounter % 2?BLOCK_COLOUR_2:BLOCK_COLOUR_1);
+      }
     }
+
 
     return cStartColour;
 }
