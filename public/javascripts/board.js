@@ -74,12 +74,15 @@ function drawBlock(iRowCounter, iBlockCounter, users_board)
 function getBlockColour(iRowCounter, iBlockCounter, users_board)
 {
     var cStartColour;
-    var BLOCK_COLOUR_1 = 'gray', BLOCK_COLOUR_2 = 'darkgray', BLOCK_COLOUR_TAKEN = 'green';
+    var BLOCK_COLOUR_1 = 'gray', BLOCK_COLOUR_2 = 'darkgray', BLOCK_COLOUR_TAKEN_P1 = 'green', BLOCK_COLOUR_TAKEN_P2 = 'purple';
     //console.log(iRowCounter + " "+iBlockCounter)
 
     if ( users_board != undefined ) {
-      if( users_board[iBlockCounter] != null && users_board[iBlockCounter][iRowCounter] != null && typeof users_board[iBlockCounter][iRowCounter] == 'number' ) {
-          cStartColour = BLOCK_COLOUR_TAKEN;
+      if( users_board[iBlockCounter] != null && users_board[iBlockCounter][iRowCounter] != null && users_board[iBlockCounter][iRowCounter] === 1 ) {
+          cStartColour = BLOCK_COLOUR_TAKEN_P1;
+      }
+      else if( users_board[iBlockCounter] != null && users_board[iBlockCounter][iRowCounter] != null && users_board[iBlockCounter][iRowCounter] === 2 ) {
+          cStartColour = BLOCK_COLOUR_TAKEN_P2;
       }
       else{
         if(iRowCounter % 2){
