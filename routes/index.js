@@ -163,7 +163,7 @@ module.exports = function Route(app){
     return {p1: e1, p2: e2};
   }
 
-  calculate_block_value = function(neighbors, current_value ){
+  var calculate_block_value = function(neighbors, current_value ){
     switch(neighbors.p1){
         case 0:
           return current_value;
@@ -181,6 +181,8 @@ module.exports = function Route(app){
           return war(neighbors, current_value);
       } 
     switch(neighbors.p2){
+        case 0:
+          return current_value;
         case 1:
           return current_value;
           break;
@@ -196,14 +198,14 @@ module.exports = function Route(app){
 
   }
 
-  three_neighbors = function(neighbors, current_value){
+  var three_neighbors = function(neighbors, current_value){
     if (current_value === 1) return 1;
     if (current_value === 2) return 2;
     if (neighbors.p1 > neighbors.p2) return 1;
     if (neighbors.p2 > neighbors.p1) return 2;
   }
 
-  war = function(neighbors, current_value){
+  var war = function(neighbors, current_value){
     if(current_value === 2 && neighbors.p1 > neighbors.p2) return 1;
     if(current_value === 1 && neighbors.p2 > neighbors.p1) return 2;
     if(current_value === 9 && neighbors.p1 > neighbors.p2) return 1;
