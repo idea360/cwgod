@@ -13,4 +13,4 @@ app.configure(function(){
 //we're going to have /routes/index.js handle all of our routing
 var route = require('./routes/index.js')(app);
 app.listen(8888);
-
+console.log('App start on port 8888')

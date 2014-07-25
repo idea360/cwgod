@@ -2,10 +2,10 @@ module.exports = function Route(app){
 
   var set_board = function(){
     var board = [];
-    for(var i = 0; i < 32; i++){
+    for(var i = 0; i < 8; i++){
       board[i] = [];
-      for( var j =0; j < 32; j++){
-        board[i][j] = 9;
+      for( var j =0; j < 8; j++){
+        board[i][j] = 3;
       }
     }
 
@@ -20,6 +20,11 @@ module.exports = function Route(app){
   
   app.get('/', function(req, res){
     res.render('index', {title:'CWGoD'});
+  });
+
+  app.io.route('loop_game', function(req){
+    conway_logic();
+    app.io.broadcast('redrawBoard', { blocks: boardPositions});
   });
   
   app.io.route('tile_clicked', function(req){
@@ -88,12 +93,11 @@ module.exports = function Route(app){
     req.io.emit('new_user_joined', {blocks: boardPositions, p1: p1_name, p2: p2_name })
   });
 
-
   var conway_logic = function (){
     for(var row in boardPositions ){
       for( var column in boardPositions[row]){
-        var num_p1_neighbors = 0;
-        var num_p2_neighbors = 0;
+        //var num_p1_neighbors = 0;
+        //var num_p2_neighbors = 0;
 
         neighbors = check_neighbors(row, column)
         console.log(neighbors)
@@ -106,63 +110,43 @@ module.exports = function Route(app){
   }; // end conway_logic
   
   var check_neighbors = function(row, column){
-    var p1 = 0, p2 = 0;
-     
-    //check top row 
-    var top_row_count = check_top_row(row, column);
-      
-    //Check same row
-    var same_row_count = check_same_row(row, column); 
-      
-    //Check the bottom rows
-    var bottom_row_count = check_bottom_row(row, column)
+     var p1 = 0, p2 = 0;
+    //check top row
+    var above_row = boardPositions[row - 1];
+    var current_row = boardPositions[row];
+    var below_row = boardPositions[row + 1];
 
-    p1 = top_row_count.p1 + same_row_count.p1 + bottom_row_count.p1;
-    p2 = top_row_count.p2 + same_row_count.p2 + bottom_row_count.p2;
+    //check the above row
+    if( above_row  != undefined ){ 
+      for (var i = column - 1; i < column + 1; i++){
+        if(above_row[i] != undefined){
+          if(above_row[i] === 1) p1++;
+          if(above_row[i] === 2) p2++;
+        }
+      }
+    }
+
+    //check middle row now
+    for(var j = column - 1; j < column + 1; j++){
+      if(j != column && current_row[j] != undefined){
+        if(current_row[j] === 1) p1++;
+        if(current_row[j] === 2) p2++;
+      }
+    }
+
+    //check bottom row now
+    if ( below_row !== undefined ){
+      for( var k = column - 1; k < column + 1; k++ ){
+        if(below_row[k] != undefined){
+          if(below_row[k] === 1) p1++;
+          if(below_row[k] === 2) p2++;
+        }
+      }
+    }
 
     return {p1: p1, p2: p2};
   }
   
-  var check_top_row = function(row, column){
-    var c1 = 0, c2 = 0;
-    if( boardPositions[row + 1]  != undefined ){
-      if ( boardPositions[row + 1][column - 1] === 1 ) c1++;
-      if ( boardPositions[row + 1][column - 1] === 2 ) c2++;
-      if ( boardPositions[row + 1][column] === 1 ) c1++;
-      if ( boardPositions[row + 1][column] === 2 ) c2++;
-      if ( boardPositions[row + 1][column + 1] === 1 ) c1++;
-      if ( boardPositions[row + 1][column + 1] === 2 ) c2++;
-    }
-
-    return {p1: c1, p2: c2};
-  }
-
-  var check_same_row = function(row, column){
-    var d1 = 0, d2 = 0;
-    
-      if ( boardPositions[row][column - 1] === 1 ) d1++;
-      if ( boardPositions[row][column - 1] === 2 ) d2++;
-      if ( boardPositions[row][column + 1] === 1 ) d1++;
-      if ( boardPositions[row][column + 1] === 2 ) d2++;
-
-    return {p1: d1, p2: d2};
-  }
-
-  var check_bottom_row = function(row, column){
-    var e1 = 0, e2 = 0;
-
-      if ( boardPositions[row - 1] != undefined ){
-        if ( boardPositions[row - 1][column - 1] === 1 ) e1++;
-        if ( boardPositions[row - 1][column - 1] === 2 ) e2++;
-        if ( boardPositions[row - 1][column] === 1 ) e1++;
-        if ( boardPositions[row - 1][column] === 2 ) e2++;
-        if ( boardPositions[row - 1][column + 1] === 1 ) e1++;
-        if ( boardPositions[row - 1][column + 1] === 2 ) e2++;
-      }
-
-    return {p1: e1, p2: e2};
-  }
-
   var calculate_block_value = function(neighbors, current_value ){
     switch(neighbors.p1){
         case 0:
@@ -195,7 +179,6 @@ module.exports = function Route(app){
         default:
           return war(neighbors, current_value);
       } 
-
   }
 
   var three_neighbors = function(neighbors, current_value){
@@ -203,14 +186,19 @@ module.exports = function Route(app){
     if (current_value === 2) return 2;
     if (neighbors.p1 > neighbors.p2) return 1;
     if (neighbors.p2 > neighbors.p1) return 2;
+    if (neighbors.p1 === neighbors.p2) return Math.floor((Math.random() * 2) + 1);
   }
 
   var war = function(neighbors, current_value){
     if(current_value === 2 && neighbors.p1 > neighbors.p2) return 1;
+    if(current_value === 2 && neighbors.p1 < neighbors.p2) return 2;
+    if(current_value === 2 && neighbors.p1 === neighbors.p2) return Math.floor((Math.random() * 2) + 1);
+    if(current_value === 1 && neighbors.p2 < neighbors.p1) return 1;
     if(current_value === 1 && neighbors.p2 > neighbors.p1) return 2;
+    if(current_value === 1 && neighbors.p2 === neighbors.p1) return Math.floor((Math.random() * 2) + 1);
     if(current_value === 9 && neighbors.p1 > neighbors.p2) return 1;
-    if(current_value === 9 && neighbors.p2 > neighbors.p1) return 2;
-     
+    if(current_value === 9 && neighbors.p1 < neighbors.p2) return 2;
+    if(current_value === 9 && neighbors.p1 === neighbors.p2) return Math.floor((Math.random() * 2) + 1);
   }
 
 };

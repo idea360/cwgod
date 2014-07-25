@@ -3,6 +3,10 @@
   //Create a new even to get data of an existing game
   io.emit('new_connection');
 
+  setInterval(function(){
+   io.emit('loop_game')
+  }, 1000);
+
   io.on('new_user_joined', function(data){
     console.log(data.p1)
     if (data.p1.length > 0){
