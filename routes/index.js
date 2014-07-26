@@ -156,10 +156,7 @@ module.exports = function Route(app){
           return current_value;
           break;
         case 2:
-          return current_value;
-          break;
-        case 3:
-          return three_neighbors(neighbors, current_value);
+          return twoNeighbors(neighbors, current_value);
           break;
         default:
           return war(neighbors, current_value);
@@ -171,34 +168,30 @@ module.exports = function Route(app){
           return current_value;
           break;
         case 2:
-          return current_value;
-          break;
-        case 3:
-          return three_neighbors(neighbors, current_value);
+          return twoNeighbors(neighbors, current_value);
           break;
         default:
           return war(neighbors, current_value);
       } 
   }
 
-  var three_neighbors = function(neighbors, current_value){
-    if (current_value === 1) return 1;
-    if (current_value === 2) return 2;
-    if (neighbors.p1 > neighbors.p2) return 1;
-    if (neighbors.p2 > neighbors.p1) return 2;
-    if (neighbors.p1 === neighbors.p2) return Math.floor((Math.random() * 2) + 1);
+  var twoNeighbors = function(neighbors, current_value){
+    if (current_value === 1 && neighbors.p1 >= neighbors.p2) return 1;
+    if (current_value === 1 && neighbors.p1 < neighbors.p2) return 2;
+    if (current_value === 2 && neighbors.p2 >= neighbors.p1) return 2;
+    if (current_value === 2 && neighbors.p2 < neighbors.p1) return 1;
   }
 
   var war = function(neighbors, current_value){
     if(current_value === 2 && neighbors.p1 > neighbors.p2) return 1;
     if(current_value === 2 && neighbors.p1 < neighbors.p2) return 2;
-    if(current_value === 2 && neighbors.p1 === neighbors.p2) return Math.floor((Math.random() * 2) + 1);
+    if(current_value === 2 && neighbors.p1 === neighbors.p2) return 9;
     if(current_value === 1 && neighbors.p2 < neighbors.p1) return 1;
     if(current_value === 1 && neighbors.p2 > neighbors.p1) return 2;
-    if(current_value === 1 && neighbors.p2 === neighbors.p1) return Math.floor((Math.random() * 2) + 1);
+    if(current_value === 1 && neighbors.p2 === neighbors.p1) return 9;
     if(current_value === 9 && neighbors.p1 > neighbors.p2) return 1;
     if(current_value === 9 && neighbors.p1 < neighbors.p2) return 2;
-    if(current_value === 9 && neighbors.p1 === neighbors.p2) return Math.floor((Math.random() * 2) + 1);
+    if(current_value === 9 && neighbors.p1 === neighbors.p2) return 9;
   }
 
 };

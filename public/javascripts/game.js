@@ -5,16 +5,11 @@
 
   setInterval(function(){
    io.emit('loop_game')
-  }, 1000);
+  }, 500);
 
   io.on('new_user_joined', function(data){
-    console.log(data.p1)
-    if (data.p1.length > 0){
-      $('#player1').text(data.p1 + ' is green');
-    }
-    if (data.p2.length > 0){
-      $('#player2').text(data.p2 + ' is purple');
-    }
+    $('#player1').text(data.p1 + ' is green');
+    $('#player2').text(data.p2 + ' is purple');
     //update the board for the user.
     draw(data.blocks)
   });
@@ -24,12 +19,17 @@
   });
 
   $('#player1').click(function(){
-    var p1 = prompt('Enter your name for Player 1: ');
-    io.emit('player1Joins', {name: p1}); 
+    do {
+      var p1 = prompt('Enter your name for Player 1: ');
+    } while (p1.length < 1);
+
+      io.emit('player1Joins', {name: p1}); 
   });
 
   $('#player2').click(function(){
-    var p2 = prompt('Enter your name for Player 2: ');    
+    do {
+      var p2 = prompt('Enter your name for Player 2: ');
+    } while (p2.length < 1); 
     io.emit('player2Joins', {name: p2});
   });
   
