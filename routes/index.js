@@ -2,10 +2,10 @@ module.exports = function Route(app){
 
   var set_board = function(){
     var board = [];
-    for(var i = 0; i < 8; i++){
+    for(var i = 0; i < 16; i++){
       board[i] = [];
-      for( var j =0; j < 8; j++){
-        board[i][j] = 3;
+      for( var j =0; j < 16; j++){
+        board[i][j] = 9;
       }
     }
 
@@ -155,9 +155,6 @@ module.exports = function Route(app){
         case 1:
           return current_value;
           break;
-        case 2:
-          return twoNeighbors(neighbors, current_value);
-          break;
         default:
           return war(neighbors, current_value);
       } 
@@ -167,19 +164,9 @@ module.exports = function Route(app){
         case 1:
           return current_value;
           break;
-        case 2:
-          return twoNeighbors(neighbors, current_value);
-          break;
         default:
           return war(neighbors, current_value);
       } 
-  }
-
-  var twoNeighbors = function(neighbors, current_value){
-    if (current_value === 1 && neighbors.p1 >= neighbors.p2) return 1;
-    if (current_value === 1 && neighbors.p1 < neighbors.p2) return 2;
-    if (current_value === 2 && neighbors.p2 >= neighbors.p1) return 2;
-    if (current_value === 2 && neighbors.p2 < neighbors.p1) return 1;
   }
 
   var war = function(neighbors, current_value){

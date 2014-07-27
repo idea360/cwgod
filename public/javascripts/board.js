@@ -16,8 +16,8 @@ function draw(users_board)
     //console.dir(usersBlocks)
     // Main entry point got the HTML5 chess board example
     canvas = document.getElementById('board');
-    NUMBER_OF_ROWS = 8;
-    NUMBER_OF_COLS = 8;
+    NUMBER_OF_ROWS = 16;
+    NUMBER_OF_COLS = 16;
     //console.dir(global_users_board);
 
     ctx = canvas.getContext('2d');
