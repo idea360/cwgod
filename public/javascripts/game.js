@@ -8,8 +8,18 @@
   }, 500);
 
   io.on('new_user_joined', function(data){
-    $('#player1').text(data.p1 + ' is green');
-    $('#player2').text(data.p2 + ' is purple');
+    if(data.p1.length < 1){
+      $('#player1').text('Join as Player1');
+    }else{
+      $('#player1').text(data.p1 + ' is green');
+    }
+
+    if(data.p2.length < 1){
+      $('#player2').text('Join as Player2');
+    }else{
+      $('#player2').text(data.p2 + ' is purple');
+    }
+    
     //update the board for the user.
     draw(data.blocks)
   });

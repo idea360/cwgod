@@ -170,15 +170,18 @@ module.exports = function Route(app){
   }
 
   var war = function(neighbors, current_value){
-    if(current_value === 2 && neighbors.p1 > neighbors.p2) return 1;
-    if(current_value === 2 && neighbors.p1 < neighbors.p2) return 2;
-    if(current_value === 2 && neighbors.p1 === neighbors.p2) return 9;
-    if(current_value === 1 && neighbors.p2 < neighbors.p1) return 1;
-    if(current_value === 1 && neighbors.p2 > neighbors.p1) return 2;
-    if(current_value === 1 && neighbors.p2 === neighbors.p1) return 9;
+    if(neighbors.p1 < 2){
+      if(current_value === 2 && neighbors.p1 > neighbors.p2) return 1;
+      if(current_value === 2 && neighbors.p1 < neighbors.p2) return 2;
+      if(current_value === 2 && neighbors.p1 === neighbors.p2) return 9;
+    }else{ return Math.floor((Math.random() * 2) + 1);}
+    if(neighbors.p2 < 2){
+      if(current_value === 1 && neighbors.p2 < neighbors.p1) return 1;
+      if(current_value === 1 && neighbors.p2 > neighbors.p1) return 2;
+      if(current_value === 1 && neighbors.p2 === neighbors.p1) return 9;
+    } else{ return Math.floor((Math.random() * 2) + 1);}
     if(current_value === 9 && neighbors.p1 > neighbors.p2) return 1;
     if(current_value === 9 && neighbors.p1 < neighbors.p2) return 2;
     if(current_value === 9 && neighbors.p1 === neighbors.p2) return 9;
   }
-
 };
