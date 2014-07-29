@@ -1,17 +1,19 @@
 function board_click(ev)
 {
+    canvas.addEventListener('click', board_click, false);
+
     var x = ev.clientX - canvas.offsetLeft;
     var y = ev.clientY - canvas.offsetTop;
 
     if (x <= canvas.height){
-       xBlock = Math.floor(x / BLOCK_SIZE);
-       yBlock = Math.floor(y / BLOCK_SIZE);
+       var xBlock = Math.floor(x / BLOCK_SIZE);
+       var yBlock = Math.floor(y / BLOCK_SIZE);
     }
 
     io.emit('tile_clicked', { x: xBlock, y: yBlock});
 }
 
-function draw(users_board)
+function draw (users_board)
 {
     //console.dir(usersBlocks)
     // Main entry point got the HTML5 chess board example
@@ -19,9 +21,7 @@ function draw(users_board)
     NUMBER_OF_ROWS = 16;
     NUMBER_OF_COLS = 16;
     //console.dir(global_users_board);
-
     ctx = canvas.getContext('2d');
- 
     // Calculdate the precise block size
     BLOCK_SIZE = (canvas.height / NUMBER_OF_ROWS);
          
@@ -29,7 +29,7 @@ function draw(users_board)
     if(canvas.getContext)
     {
       // Draw the background
-      drawBoard(users_board);
+      drawBoard(users_board, NUMBER_OF_ROWS, ctx, BLOCK_SIZE, NUMBER_OF_COLS);
  
       canvas.addEventListener('click', board_click, false);
       }
@@ -39,11 +39,11 @@ function draw(users_board)
       }
  }
 
-function drawBoard(users_board)
+var drawBoard = function (users_board, NUMBER_OF_ROWS, ctx, BLOCK_SIZE, NUMBER_OF_COLS)
 {  
-    for(iRowCounter = 0; iRowCounter < NUMBER_OF_ROWS; iRowCounter++)
+    for(var iRowCounter = 0; iRowCounter < NUMBER_OF_ROWS; iRowCounter++)
     {
-        drawRow(iRowCounter, users_board);
+        drawRow(iRowCounter, users_board, NUMBER_OF_ROWS, ctx, BLOCK_SIZE, NUMBER_OF_COLS);
     }  
      
     // Draw outline
@@ -51,16 +51,16 @@ function drawBoard(users_board)
     ctx.strokeRect(0, 0, NUMBER_OF_ROWS * BLOCK_SIZE, NUMBER_OF_COLS * BLOCK_SIZE);
 }
 
-function drawRow(iRowCounter, users_board)
+var drawRow = function (iRowCounter, users_board, NUMBER_OF_ROWS, ctx, BLOCK_SIZE)
 {
     // Draw NUMBER_OF_ROWS block left to right
     for(iBlockCounter = 0; iBlockCounter < NUMBER_OF_ROWS; iBlockCounter++)
     {
-        drawBlock(iRowCounter, iBlockCounter, users_board);
+        drawBlock(iRowCounter, iBlockCounter, users_board, ctx, BLOCK_SIZE);
     }
 }
 
-function drawBlock(iRowCounter, iBlockCounter, users_board)
+var drawBlock = function (iRowCounter, iBlockCounter, users_board, ctx, BLOCK_SIZE)
 {  
     // Set the background
     ctx.fillStyle = getBlockColour(iRowCounter, iBlockCounter, users_board);
@@ -71,7 +71,7 @@ function drawBlock(iRowCounter, iBlockCounter, users_board)
     ctx.stroke();  
 }
 
-function getBlockColour(iRowCounter, iBlockCounter, users_board)
+var getBlockColour = function (iRowCounter, iBlockCounter, users_board)
 {
     var cStartColour;
     var BLOCK_COLOUR_1 = 'gray', BLOCK_COLOUR_2 = 'darkgray', BLOCK_COLOUR_TAKEN_P1 = 'green', BLOCK_COLOUR_TAKEN_P2 = 'purple';
